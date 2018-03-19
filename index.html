@@ -9,9 +9,10 @@
   <meta name="author" content="">
   <title>Dashboard</title>
   <!-- Bootstrap core CSS-->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <!-- Bootstrap core CSS-->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom fonts for this template-->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <!-- Page level plugin CSS-->
   <link href="./vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
   <!-- Custom styles for this template-->
@@ -44,6 +45,18 @@
           <a class="nav-link" href="index.html">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="./registeremp.html">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Register Workers</span>
+          </a>
+        </li>
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="./registercar.html">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Register Vehicles</span>
           </a>
         </li>
       </ul>
@@ -140,18 +153,59 @@
       <!-- Example DataTables Card-->
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i> Data Table Example</div>
+          <i class="fa fa-table"></i> Employee Table</div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Position</th>
-                  <th>Office</th>
-                  <th>Age</th>
-                  <th>Start date</th>
+                  <th>Employee Number</th>
+                  <th>Employee Name</th>
+                  <th>Designation</th>
                   <th>Salary</th>
+                  <th>Contact Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>15BCE2071</td>
+                  <td>Shantanu Pramanik</td>
+                  <td>System Architect</td>
+                  <td>$320,800</td>
+                  <td>9406539777</td>
+                </tr>
+                <tr>
+                  <td>15BCE2079</td>
+                  <td>Anshul Hedau</td>
+                  <td>Developer(Sr.)</td>
+                  <td>$320,800</td>
+                  <td>9406539777</td>
+                </tr>
+                <tr>
+                  <td>15BCE2071</td>
+                  <td>Dheeraj Nair</td>
+                  <td>Junior Technical Author</td>
+                  <td>$320,800</td>
+                  <td>9406539777</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Vehicle Table</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Registration Number</th>
+                  <th>Vehicle Type</th>
+                  <th>Driver</th>
+                  <th>Contact Number</th>
                 </tr>
               </thead>
               <tbody>
@@ -160,26 +214,7 @@
                   <td>System Architect</td>
                   <td>Kolkata</td>
                   <td>21</td>
-                  <td>2018/02/25</td>
-                  <td>$320,800</td>
                 </tr>
-                <tr>
-                  <td>Anshul Hedau</td>
-                  <td>Developer</td>
-                  <td>Bhopal</td>
-                  <td>20</td>
-                  <td>2018/02/25</td>
-                  <td>$370,750</td>
-                </tr>
-                <tr>
-                  <td>Dheeraj Nair</td>
-                  <td>Junior Technical Author</td>
-                  <td>Jamnagar</td>
-                  <td>20</td>
-                  <td>2018/01/12</td>
-                  <td>$286,000</td>
-                </tr>
-                
               </tbody>
             </table>
           </div>
@@ -218,7 +253,7 @@
         </div>
       </div>
     </div>
-
+    <div id='outputDiv'></div>
     <script type="text/javascript">
       
           var url_string = window.location.href;
@@ -240,6 +275,28 @@
             console.log(username,password,email);//,address,region,contact);
             console.log("yes");
           });
+
+          /*firebase.database().ref('employee/').once('value').then(function(snapshot) {
+            var name = (snapshot.val());// && snapshot.val().name) ;
+            //var salary = (snapshot.val() && snapshot.val().salary) ;
+            console.log(name);
+
+          });*/
+
+          var groupRef = firebase.database().ref('vehicles/').once('value').then(function(snapshot) {
+            var data = (snapshot.val());// && snapshot.val().name) ;
+            //var salary = (snapshot.val() && snapshot.val().salary) ;
+            console.log(data);
+            var key = snapshot.length;//.(snapshot.key);
+            console.log(key);
+          });
+          document.getElementById("outputDiv").innerHTML = "";
+          document.getElementById("outputDiv").innerHTML += "<table border=1 width=100%><tr>";
+          for(j=1;j<=10;j++)
+          {
+              document.getElementById("outputDiv").innerHTML += "<td align=center>"+namev+"</td>";
+          }
+          document.getElementById("outputDiv").innerHTML += "</tr></table>";
     </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
