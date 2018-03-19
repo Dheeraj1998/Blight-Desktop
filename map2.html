@@ -4,12 +4,12 @@
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <style>      
-      #map 
+    <style>
+      #map
 	  {
         height: 100%;
       }
-      html, body 
+      html, body
 	  {
         height: 100%;
         margin: 0;
@@ -19,26 +19,60 @@
   </head>
   <body>
     <div id="map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBbGWcyla5IKW8s6M7IRhne2d02QzGOYmw",
+        authDomain: "blight-c675c.firebaseapp.com",
+        databaseURL: "https://blight-c675c.firebaseio.com",
+        projectId: "blight-c675c",
+        storageBucket: "blight-c675c.appspot.com",
+        messagingSenderId: "286025009005"
+      };
+      firebase.initializeApp(config);
+
+      // Setting up the database for Firebase
+      var database = firebase.database();
+
+      // Setting up the reference to the database
+      var databaseRef = firebase.database().ref('users');
+
+    databaseRef.on('value', function(snapshot){
+      snapshot.forEach(function(child){
+          var unique_id = child.val().name + "";
+          unique_id = unique_id + "\n" + child.val().contact;
+          var latLng = new google.maps.LatLng(child.val().lat, child.val().lon);
+          var marker = new google.maps.Marker({
+            title: unique_id,
+            position: latLng,
+            map: map
+          });
+      });
+    });
+    </script>
+
     <script>
       var map, infoWindow;
       function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), 
+        map = new google.maps.Map(document.getElementById('map'),
 		{
           center: {lat: 0, lng: 0},
           zoom: 15
         });
         infoWindow = new google.maps.InfoWindow;
 
-        if (navigator.geolocation) 
+        if (navigator.geolocation)
 		{
-          navigator.geolocation.getCurrentPosition(function(position) 
+          navigator.geolocation.getCurrentPosition(function(position)
 			{
-            var pos = 
+            var pos =
 				{
 				  lat: position.coords.latitude,
 				  lng: position.coords.longitude
             	};
-		
+
 			  var  marker = new google.maps.Marker
 			({
 			  map: map,
@@ -46,28 +80,28 @@
 			  animation: google.maps.Animation.BOUNCE,
 			  position: pos
 			});
-			
+
 			marker.addListener('click', toggleBounce);
-			  
-			  
-	function toggleBounce() 
+
+
+	function toggleBounce()
 	{
-        if (marker.getAnimation() !== null) 
+        if (marker.getAnimation() !== null)
 		{
           marker.setAnimation(null);
-        } 
-		else 
+        }
+		else
 		{
           marker.setAnimation(google.maps.Animation.BOUNCE);
         }
-    }					 
+    }
 
             infoWindow.open(map);
             map.setCenter(pos);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
           });
-        } 
+        }
 		 else {
           handleLocationError(false, infoWindow, map.getCenter());
         }
