@@ -26,6 +26,11 @@
      messagingSenderId: "286025009005"
    };
    firebase.initializeApp(config);
+   firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+    }).catch(function(error) {
+    // An error happened.
+    });
   </script>
 
 </head>
@@ -62,6 +67,7 @@
   </div>
   <!-- Bootstrap core JavaScript-->
   <script type="text/javascript">
+
     function getin()  {
     var email = document.getElementById("InputEmail1").value;
     var pass = document.getElementById("InputPassword1").value;
