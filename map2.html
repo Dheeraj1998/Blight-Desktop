@@ -47,7 +47,10 @@
           var marker = new google.maps.Marker({
             title: unique_id,
             position: latLng,
-            map: map
+            map: map,	
+			icon:'./usericon.png',
+			
+			title:unique_id
           });
       });
     });
@@ -55,7 +58,8 @@
 
     <script>
       var map, infoWindow;
-      function initMap() {
+      function initMap() 
+	{
         map = new google.maps.Map(document.getElementById('map'),
 		{
           center: {lat: 0, lng: 0},
@@ -77,34 +81,36 @@
 			({
 			  map: map,
 			  draggable: true,
-			  animation: google.maps.Animation.BOUNCE,
-			  position: pos
+			 // animation: google.maps.Animation.BOUNCE,
+			  position: pos,
+			label: {
+			color: '#CC3333',
+			fontWeight: 'bold',
+			text: "Rescue Center",
+			marginTop:"100px"
+		  	},
+			//icon:'./rescue.png',
+			 icon: {
+    labelOrigin: new google.maps.Point(32, 60),
+				 url:'./rescue.png',
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(20, 40),
+  				},	
+				
+			  
 			});
 
-			marker.addListener('click', toggleBounce);
-
-
-	function toggleBounce()
-	{
-        if (marker.getAnimation() !== null)
-		{
-          marker.setAnimation(null);
-        }
-		else
-		{
-          marker.setAnimation(google.maps.Animation.BOUNCE);
-        }
-    }
-
-            infoWindow.open(map);
+	       infoWindow.open(map);
             map.setCenter(pos);
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
           });
         }
-		 else {
+		 else 
+		 {
           handleLocationError(false, infoWindow, map.getCenter());
         }
+		
       }
 
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {

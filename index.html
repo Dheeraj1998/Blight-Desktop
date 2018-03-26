@@ -113,12 +113,12 @@
               </div>
               <div class="mr-5"><span id="usersdeployed">2</span> Users Nearby</div>
             </div>
-            <!--<a class="card-footer text-white clearfix small z-1" href="#">
+            <a class="card-footer text-white clearfix small z-1" href="#displayusers">
               <span class="float-left">View Details</span>
               <span class="float-right">
                 <i class="fa fa-angle-right"></i>
               </span>
-            </a>-->
+            </a>
           </div>
         </div>
         <div class="col-xl-3 col-sm-6 mb-3">
@@ -183,6 +183,18 @@
       
           
       <!-- Example DataTables Card-->
+      <div class="card mb-3" id="displayusers">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Users Table</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <div id="userstable"></div>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer small text-muted">Updated at <span id="times1">11:59 PM</span></div>
+      </div>
+
       <div class="card mb-3" id="displayemployee">
         <div class="card-header">
           <i class="fa fa-table"></i> Employee Table</div>
@@ -194,6 +206,8 @@
         </div>
         <div class="card-footer small text-muted">Updated at <span id="times1">11:59 PM</span></div>
       </div>
+
+
       <div class="card mb-3" id="displayvehicle">
         <div class="card-header">
           <i class="fa fa-table"></i> Vehicle Table</div>
@@ -276,19 +290,31 @@
             
             var key_num_emp = snapshot.numChildren();//.(snapshot.key);
             document.getElementById("employeedeployed").innerHTML = key_num_emp;
-            var scre = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Employee Number</th></tr></thead><tbody>";
+            var scre = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Employee Number</th><th>Employee Name</th><th>Designation</th><th>Address</th></tr></thead><tbody>";
             for(i = 0; i < key_num_emp; i++){
               var key_first = Object.keys(snapshot.val())[i];
-              scre += "<tr><td>"+key_first+"</td></tr>";
+              //scre += "<tr><td>"+key_first+"</td><td><span class='ansh1'></span></td></tr>"; 
               console.log("CHECK" + Object.keys(snapshot.val())[i]);
                 var employeeRef = firebase.database().ref("employee/" + key_first);
                 employeeRef.once('value').then(function (snapshot) {
-                   console.log("ADDRESS : " + snapshot.val().address); 
+                  emp_add= snapshot.val().address;
+                  emp_type = snapshot.val().type;
+                  emp_name = snapshot.val().name;
+                   console.log("ADDRESS : " + snapshot.val().address);
+                   console.log("Type :"+snapshot.val().type);
+                   console.log("Name :"+snapshot.val().name);
+                   scre += "<tr><td>"+key_first+"</td><td>"+emp_name+"</td><td>"+emp_type+"</td><td>"+emp_add+"</td></tr>";
                 });
             }
-            scre +=  "</tbody></table>";
-            document.getElementById("employeetable").innerHTML += scre;
-            console.log(scre);
+
+            
+            setTimeout(tabledisplay1,1000);
+            function tabledisplay1()
+            {
+              scre +=  "</tbody></table>";
+              document.getElementById("employeetable").innerHTML += scre;
+              console.log(scre);
+            };
 
           });
 
@@ -299,15 +325,63 @@
             
             var key_num  = snapshot.numChildren();//.(snapshot.key);
             document.getElementById("vehicledeployed").innerHTML = key_num;
-            var scr = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Registration Number</th></tr></thead><tbody>";
+            var scr = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Registration Number</th><th>Contact Number</th><th>Vehicle Type</th><th>Address</th></tr></thead><tbody>";
             for(i = 0; i < key_num; i++){
               var key_first = Object.keys(snapshot.val())[i];
-              scr += "<tr><td>"+key_first+"</td></tr>";
               //console.log(Object.keys(snapshot.val())[i];);
+              console.log("CHECK" + Object.keys(snapshot.val())[i]);
+                var employeeRef = firebase.database().ref("vehicles/" + key_first);
+                employeeRef.once('value').then(function (snapshot) {
+                  v_add= snapshot.val().address;
+                  v_type = snapshot.val().type;
+                  v_name = snapshot.val().contact;
+                  console.log(v_add,v_type,v_type);
+                   scr += "<tr><td>"+key_first+"</td><td>"+v_name+"</td><td>"+v_type+"</td><td>"+v_add+"</td></tr>";
+                });
             }
-            scr +=  "</tbody></table>";
-            document.getElementById("vehicletable").innerHTML += scr;
-            console.log(scr);
+            setTimeout(tabledisplay2,1000);
+            function tabledisplay2()
+            {
+              scr +=  "</tbody></table>";
+              document.getElementById("vehicletable").innerHTML += scr;
+              console.log(scr);
+            };
+            
+
+                      firebase.database().ref('users/').once('value').then(function(snapshot) {
+            var name = (snapshot.val());// && snapshot.val().name) ;
+            
+            var key_num_emp = snapshot.numChildren();//.(snapshot.key);
+            //document.getElementById("employeedeployed").innerHTML = key_num_emp;
+            var scru = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>User Name</th><th>User Contact</th><th>Emergency Contact</th><th>Alert Status</th></tr></thead><tbody>";
+            for(i = 0; i < key_num_emp; i++){
+              var key_first = Object.keys(snapshot.val())[i];
+              //scre += "<tr><td>"+key_first+"</td><td><span class='ansh1'></span></td></tr>"; 
+              console.log("CHECK" + Object.keys(snapshot.val())[i]);
+                var employeeRef = firebase.database().ref("users/" + key_first);
+                employeeRef.once('value').then(function (snapshot) {
+                    u_alert = snapshot.val().alert;
+                    u_contact = snapshot.val().contact;
+                    u_name = snapshot.val().name;
+                    u_e_contact = snapshot.val().emergency_contact;
+                   scru += "<tr><td>"+u_name+"</td><td>"+u_contact+"</td><td>"+u_e_contact+"</td><td>"+u_alert+"</td></tr>";
+                });
+            }
+
+            
+            setTimeout(tabledisplay3,1000);
+            function tabledisplay3()
+            {
+              scru +=  "</tbody></table>";
+              document.getElementById("userstable").innerHTML += scru;
+              console.log(scru);
+            };
+
+          });
+
+
+
+
             var d = new Date();
               var n = d.toLocaleTimeString();
               console.log(n);
@@ -315,8 +389,6 @@
               document.getElementById("times1").innerHTML = n;
               document.getElementById("times2").innerHTML = n;
           });
-
-
 
           
           
