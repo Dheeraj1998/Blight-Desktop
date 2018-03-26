@@ -359,7 +359,7 @@
               //scre += "<tr><td>"+key_first+"</td><td><span class='ansh1'></span></td></tr>"; 
               console.log("CHECK" + Object.keys(snapshot.val())[i]);
                 var employeeRef = firebase.database().ref("users/" + key_first);
-                employeeRef.once('value').then(function (snapshot) {
+                employeeRef.on('value',function (snapshot) {
                     u_alert = snapshot.val().alert;
                     u_contact = snapshot.val().contact;
                     u_name = snapshot.val().name;
