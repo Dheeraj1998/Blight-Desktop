@@ -272,7 +272,11 @@
             for(i = 0; i < key_num_emp; i++){
               var key_first = Object.keys(snapshot.val())[i];
               scre += "<tr><td>"+key_first+"</td></tr>";
-              //console.log(Object.keys(snapshot.val())[i];);
+              console.log("CHECK" + Object.keys(snapshot.val())[i]);
+                var employeeRef = firebase.database().ref("employee/" + key_first);
+                employeeRef.once('value').then(function (snapshot) {
+                   console.log("ADDRESS : " + snapshot.val().address); 
+                });
             }
             scre +=  "</tbody></table>";
             document.getElementById("employeetable").innerHTML += scre;
