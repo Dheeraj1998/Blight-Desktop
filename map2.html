@@ -1,128 +1,181 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <style>
-      #map
-	  {
-        height: 100%;
-      }
-      html, body
-	  {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+        #map {
+            height: 100%;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div id="map"></div>
 
     <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
     <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyBbGWcyla5IKW8s6M7IRhne2d02QzGOYmw",
-        authDomain: "blight-c675c.firebaseapp.com",
-        databaseURL: "https://blight-c675c.firebaseio.com",
-        projectId: "blight-c675c",
-        storageBucket: "blight-c675c.appspot.com",
-        messagingSenderId: "286025009005"
-      };
-      firebase.initializeApp(config);
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBbGWcyla5IKW8s6M7IRhne2d02QzGOYmw",
+            authDomain: "blight-c675c.firebaseapp.com",
+            databaseURL: "https://blight-c675c.firebaseio.com",
+            projectId: "blight-c675c",
+            storageBucket: "blight-c675c.appspot.com",
+            messagingSenderId: "286025009005"
+        };
+        firebase.initializeApp(config);
 
-      // Setting up the database for Firebase
-      var database = firebase.database();
+        // Setting up the database for Firebase
+        var database = firebase.database();
 
-      // Setting up the reference to the database
-      var databaseRef = firebase.database().ref('users');
+        // Setting up the reference to the database
+        var databaseRef = firebase.database().ref('users');
 
-    databaseRef.on('value', function(snapshot){
-      snapshot.forEach(function(child){
-          var unique_id = child.val().name + "";
-          unique_id = unique_id + "\n" + child.val().contact;
-          var latLng = new google.maps.LatLng(child.val().lat, child.val().lon);
-          var marker = new google.maps.Marker({
-            title: unique_id,
-            position: latLng,
-            map: map,	
-			icon:'./usericon.png',
-			
-			title:unique_id
-          });
-      });
-    });
+        databaseRef.on('value', function(snapshot) {
+            snapshot.forEach(function(child) {
+                var unique_id = child.val().name + "";
+                unique_id = unique_id + "\n" + child.val().contact;
+                var latLng = new google.maps.LatLng(child.val().lat, child.val().lon);
+                var marker = new google.maps.Marker({
+                    title: unique_id,
+                    position: latLng,
+                    map: map,
+                    icon: './usericon.png',
+
+                    title: unique_id
+                });
+            });
+        });
+
     </script>
 
     <script>
-      var map, infoWindow;
-      function initMap() 
-	{
-        map = new google.maps.Map(document.getElementById('map'),
-		{
-          center: {lat: 0, lng: 0},
-          zoom: 15
-        });
-        infoWindow = new google.maps.InfoWindow;
+        var map, infoWindow;
 
-        if (navigator.geolocation)
-		{
-          navigator.geolocation.getCurrentPosition(function(position)
-			{
-            var pos =
-				{
-				  lat: position.coords.latitude,
-				  lng: position.coords.longitude
-            	};
+        function initMap() {
 
-			  var  marker = new google.maps.Marker
-			({
-			  map: map,
-			  draggable: true,
-			 // animation: google.maps.Animation.BOUNCE,
-			  position: pos,
-			label: {
-			color: '#CC3333',
-			fontWeight: 'bold',
-			text: "Rescue Center",
-			marginTop:"100px"
-		  	},
-			//icon:'./rescue.png',
-			 icon: {
-    labelOrigin: new google.maps.Point(32, 60),
-				 url:'./rescue.png',
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(20, 40),
-  				},	
-				
-			  
-			});
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: 0,
+                    lng: 0
+                },
+                zoom: 15
+            });
+            infoWindow = new google.maps.InfoWindow;
 
-	       infoWindow.open(map);
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
+
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        draggable: true,
+                        // animation: google.maps.Animation.BOUNCE,
+                        position: pos,
+                        label: {
+                            color: '#CC3333',
+                            fontWeight: 'bold',
+                            text: "Rescue Center",
+                            marginTop: "100px"
+                        },
+                        //icon:'./rescue.png',
+                        icon: {
+                            labelOrigin: new google.maps.Point(32, 60),
+                            url: './rescue.png',
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(20, 40),
+                        },
+
+
+                    });
+
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+
+            var alertRef = firebase.database().ref("alerts");
+            var alertLocations = new Array();
+            alertRef.on('value', function(snapshot) {
+                snapshot.forEach(function(item) {
+                    console.log("ALERT : " + item.val().contact);
+                    var userDetails = new Object();
+                    userDetails['lat'] = item.val().lat;
+                    userDetails['lon'] = item.val().lon;
+                    userDetails['contact'] = item.val().contact;
+                    alertLocations.push(userDetails);
+
+                })
+                alertLocations.forEach(function(userDetails) {
+                    console.log("DETAILS : lat = " + userDetails.lat);
+                    console.log("DETAILS : lon = " + userDetails.lon);
+                    console.log("DETAILS : contact = " + userDetails.contact);
+
+                    var pos = {
+                        lat: parseFloat(userDetails.lat),
+                        lng: parseFloat(userDetails.lon)
+                    };
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        draggable: true,
+                        animation: google.maps.Animation.BOUNCE,
+                        position: pos,
+                        label: {
+                            color: '#CC3333',
+                            fontWeight: 'bold',
+                            text: userDetails.contact,
+                            marginTop: "100px"
+                        },
+                        //icon:'./rescue.png',
+                        icon: {
+                            labelOrigin: new google.maps.Point(32, 60),
+                            url: './alerticon.png',
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(20, 40),
+                        },
+
+
+                    });
+
+                });
+
+            });
+
         }
-		 else 
-		 {
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-		
-      }
 
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
-        infoWindow.open(map);
-      }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEJ3j8zvJEQJktImDCoyiEF9Gp-j6Q85M&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEJ3j8zvJEQJktImDCoyiEF9Gp-j6Q85M&callback=initMap">
+
+
     </script>
-  </body>
+</body>
+
 </html>
