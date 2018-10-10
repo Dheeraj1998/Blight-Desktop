@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta content="IE=edge" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+	<title>Blight - Register Page</title>
+	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="css/sb-admin.css" rel="stylesheet">
+	<link href="styles.css" rel="stylesheet">
+	<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js">
+	</script>
+	<script>
+	       // Initialize Firebase
+	       var config = {
+	           apiKey: "AIzaSyBbGWcyla5IKW8s6M7IRhne2d02QzGOYmw",
+	           authDomain: "blight-c675c.firebaseapp.com",
+	           databaseURL: "https://blight-c675c.firebaseio.com",
+	           projectId: "blight-c675c",
+	           storageBucket: "blight-c675c.appspot.com",
+	           messagingSenderId: "286025009005"
+	       };
+	       firebase.initializeApp(config);
+	       var database = firebase.database();
+	</script>
+	<script type="text/javascript">
+	       firebase.auth().signOut().then(function() {
+	           // Sign-out successful.
+	       }).catch(function(error) {
+	           // An error happened.
+	       });
+
+	       function log() {
+	           var name = document.getElementById("InputName").value;
+	           var email = document.getElementById("InputEmail1").value;
+	           var pass = document.getElementById("InputPassword1").value;
+	           var address = document.getElementById("InputAddress1").value;
+	           var region = document.getElementById("Region").value;
+	           var contact = document.getElementById("Contact").value;
+	           var lat = document.getElementById("Latitude").value;
+	           var lon = document.getElementById("Longitude").value;
+
+	           firebase.auth().createUserWithEmailAndPassword(email, pass)
+	               .then(function() {
+	                   alert("Registration Successful!");
+	                   var userId = firebase.auth().currentUser.uid;
+	                   writeUserData(name, email, pass, userId, address, region, contact, lat, lon);
+
+	                   function writeUserData(name, email, pass, userId, address, region, contact, lat, lon) {
+	                       firebase.database().ref('rescueworkers/' + userId).set({
+	                           username: name,
+	                           email: email,
+	                           pass: pass,
+	                           address: address,
+	                           region: region,
+	                           contact: contact,
+	                           lat: lat,
+	                           lon: lon
+	                       });
+	                   }
+
+	               })
+	               .catch(function(error) {
+	                   var errorCode = error.code;
+	                   var errorMessage = error.message;
+	                   alert(errorCode + " : " + errorMessage);
+
+	               })
+	       }
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="card card-register mx-auto mt-5">
+			<div class="card-header">
+				<h2><b>Rescue Team - Registration</b>
+				</h2>
+			</div>
+
+
+			<div class="card-body">
+				<form onsubmit="Register()">
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-12">
+								<label for="InputName"><b>Lead name</b></label> <input autocomplete='name' class="form-control" id="InputName" placeholder="Enter lead name" type="text">
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label for="InputEmail1"><b>Email address</b></label> <input autocomplete='name' class="form-control" id="InputEmail1" placeholder="Enter email" type="email">
+					</div>
+
+
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-12">
+								<label for="InputPassword1"><b>Password</b></label> <input class="form-control" id="InputPassword1" placeholder="Enter password" type="password">
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-6">
+								<label for="Latitude"><b>Latitude</b></label> <input class="form-control" id="Latitude" placeholder="Latitude" type="text">
+							</div>
+
+
+							<div class="col-md-6">
+								<label for="Longitude"><b>Longitude</b></label> <input class="form-control" id="Longitude" placeholder="Longitude" type="text">
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label for="InputAddress1"><b>Full Address</b></label> <input class="form-control" id="InputAddress1" placeholder="Enter Address" type="text">
+					</div>
+
+
+					<div class="form-group">
+						<div class="form-row">
+							<div class="col-md-6">
+								<label for="Region"><b>Region</b></label> <input autocomplete='name' class="form-control" id="Region" placeholder="Enter region" type="text">
+							</div>
+
+
+							<div class="col-md-6">
+								<label for="Contact"><b>Contact number</b></label> <input autocomplete='name' class="form-control" id="Contact" placeholder="Enter contact number" type="text">
+							</div>
+						</div>
+					</div>
+					<br>
+				</form>
+
+
+				<div class="form-row">
+					<div class="col-md-3">
+					</div>
+
+
+					<div class="col-md-6 col-md-offset-6">
+						<input class="btn btn-primary btn-block" onclick="log()" type="submit" value="Register">
+					</div>
+				</div>
+
+
+				<div class="text-center">
+					<a class="d-block small mt-3" href="login_page.html">Go back to Login</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="vendor/jquery/jquery.min.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+</html>
