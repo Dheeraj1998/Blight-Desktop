@@ -112,6 +112,10 @@
             window.location.reload(true);
           });
 
+          alertRef.on('child_removed', function(snapshot) {
+            window.location.reload(true);
+          });
+
           alertRef.on('value', function(snapshot) {
               snapshot.forEach(function(item) {
                   var userDetails = new Object();

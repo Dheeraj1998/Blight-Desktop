@@ -5,20 +5,16 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>Register Employee</title>
+
+  <title>Blight - Vehicle Registration</title>
   <!-- Bootstrap core CSS-->
+  <link rel="stylesheet" href="styles.css">
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom fonts for this template-->
   <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <!-- Custom styles for this template-->
   <link href="css/sb-admin.css" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
-  
-</head>
-
-<body class="bg-dark">
   <script>
    // Initialize Firebase
    var config = {
@@ -36,41 +32,27 @@
     function log()  {
     var number = document.getElementById("InputNumber").value;
     var type = document.getElementById("InputType").value;
-    var email = document.getElementById("InputEmail1").value;
-    var pass = document.getElementById("InputPassword1").value;
     var address = document.getElementById("InputAddress1").value;
-    var name = document.getElementById("name").value;
     var driver = document.getElementById("Driver").value;
     var contact = document.getElementById("Contact").value;
-    console.log(number,type,email,pass,address,name,driver,contact);
-    firebase.auth().signInWithEmailAndPassword(email,pass).then(function(){
-        var userId = firebase.auth().currentUser.uid;
-        writeUserData(number,type,email,pass,address,name,driver,contact);
-         
-        
-      }).
-      catch(function(error)  {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      })
 
-      
-    }
-    function writeUserData(number,type,email,pass,address,name,driver,contact) {
-        firebase.database().ref('employee/' + number).set({
+    writeUserData(number,type,address,driver,contact);
+
+    function writeUserData(number,type,address,driver,contact) {
+        firebase.database().ref('vehicles/' + number).set({
           number: number,
-          type :    type,
-          email: email,
-          pass: pass,
-          name:name,
+          type : type,
           address : address,
           driver : driver,
           contact : contact
         });
-    
-    }
-
+      }
+      alert('The vehicle has been registered!');
+}
   </script>
+</head>
+
+<body>
   <div class="container">
     <div class="card card-register mx-auto mt-5">
       <div class="card-header"><h2><b>Rescue Vehicle Registrations</b></h2></div>
@@ -79,44 +61,28 @@
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-12">
-                <label for="InputNumber"><b>Employee Number</b></label>
-                <input class="form-control" id="InputNumber" type="text" placeholder="Enter Employee Number" autocomplete='name'>
+                <label for="InputNumber"><b>Vehicle Number</b></label>
+                <input class="form-control" id="InputNumber" type="text" placeholder="Enter number" autocomplete='name'>
               </div>
             </div>
           </div>
           <div class="form-group">
-            <div class="form-row">
-              <div class="col-md-12">
-                <label for="name"><b>Employee Name</b></label>
-                <input class="form-control" id="name" type="text" placeholder="Enter Employee Name" autocomplete='name'>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="InputType"><b>Designation</b></label>
-            <input class="form-control" id="InputType" type="email"  placeholder="Enter Designation" autocomplete='name'>
-          </div>
-          <div class="form-group">
-            <label for="InputEmail1"><b>Email address</b></label>
-            <input class="form-control" id="InputEmail1" type="email" aria-describedby="emailHelp" placeholder="Enter email">
-          </div>
-          <div class="form-group">
-            <label for="InputPassword1"><b>Password</b></label>
-            <input class="form-control" id="InputPassword1" type="password" placeholder="Password">
+            <label for="InputType"><b>Vehicle Type</b></label>
+            <input class="form-control" id="InputType" type="text"  placeholder="Enter type" autocomplete='name'>
           </div>
           <div class="form-group">
             <label for="InputAddress1"><b>Full Address</b></label>
-                <input class="form-control" id="InputAddress1" type="text" placeholder="Enter Address">
+                <input class="form-control" id="InputAddress1" type="text" placeholder="Enter address">
           </div>
           <div class="form-group">
             <div class="form-row">
               <div class="col-md-6">
-                <label for="Driver"><b>Salary</b></label>
-                <input class="form-control" id="Driver" type="text"  placeholder="Enter Salary" autocomplete='name'>
+                <label for="Driver"><b>Driver</b></label>
+                <input class="form-control" id="Driver" type="text"  placeholder="Enter driver name" autocomplete='name'>
               </div>
               <div class="col-md-6">
                 <label for="Contact"><b>Contact Number</b></label>
-                <input class="form-control" id="Contact" type="text" placeholder="Enter Contact Number" autocomplete='name'>
+                <input class="form-control" id="Contact" type="text" placeholder="Enter contact number" autocomplete='name'>
               </div>
             </div>
           </div>
@@ -124,15 +90,15 @@
           </form>
           <div class="form-row">
               <div class="col-md-3">
-                
+
               </div>
               <div class="col-md-6 col-md-offset-6">
           			<input class="btn btn-primary btn-block" type="submit" value="Register"  onclick="log()">
           		</div>
           	</div>
-        
+
         <div class="text-center">
-          <a class="d-block small mt-3" href="login.html">Login Page</a>
+          <a class="d-block small mt-3" href="index_page.html">Dashboard</a>
         </div>
       </div>
     </div>

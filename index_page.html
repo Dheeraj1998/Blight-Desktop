@@ -31,7 +31,7 @@
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-        <a class="navbar-brand" href="">Welcome, <span id="name"><span></a>
+        <a class="navbar-brand" href="">Welcome!</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -44,13 +44,13 @@
           </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                    <a class="nav-link" href="./registeremp.html">
+                    <a class="nav-link" href="./register_emp.html">
             <i class="fa fa-fw fa-dashboard"></i>
-            <span class="nav-link-text">Register Workers</span>
+            <span class="nav-link-text">Register Volunteers</span>
           </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                    <a class="nav-link" href="./registercar.html">
+                    <a class="nav-link" href="./register_car.html">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Register Vehicles</span>
           </a>
@@ -146,7 +146,7 @@
                             <div class="card-body-icon">
                                 <i class="fa fa-fw fa-list"></i>
                             </div>
-                            <div class="mr-5">0 Distress Call</div>
+                            <div class="mr-5"><span id="alertCalls">0</span> Distress Call</div>
                         </div>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
 
             <div class="card mb-3" id="displayemployee">
                 <div class="card-header">
-                    <i class="fa fa-table"></i> Employee Table</div>
+                    <i class="fa fa-table"></i> Volunteers</div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <div id="employeetable"></div>
@@ -220,7 +220,7 @@
 
             <div class="card mb-3" id="displayvehicle">
                 <div class="card-header">
-                    <i class="fa fa-table"></i> Vehicle Table</div>
+                    <i class="fa fa-table"></i> Vehicles</div>
                 <div class="card-body">
                     <div class="table-responsive">
 
@@ -271,36 +271,32 @@
             //var userId = firebase.auth().currentUser.uid;
             //console.log(userId);
             //return
-            firebase.database().ref('rescueworkers/' + c).once('value').then(function(snapshot) {
-                var username = (snapshot.val() && snapshot.val().username);
-                var password = (snapshot.val() && snapshot.val().pass);
-                var email = (snapshot.val() && snapshot.val().email);
-
-                document.getElementById("name").innerHTML = username;
-            });
-
 
             var groupRef = firebase.database().ref('users/').once('value').then(function(snapshot) {
                 var key_num_users = snapshot.numChildren();
                 document.getElementById("usersdeployed").innerHTML = key_num_users;
             });
 
+            var groupRef = firebase.database().ref('alerted_users/').once('value').then(function(snapshot) {
+                var key_num_users = snapshot.numChildren();
+                document.getElementById("alertCalls").innerHTML = key_num_users;
+            });
 
             firebase.database().ref('employee/').once('value').then(function(snapshot) {
                 var name = (snapshot.val());
 
                 var key_num_emp = snapshot.numChildren();
                 document.getElementById("employeedeployed").innerHTML = key_num_emp;
-                var scre = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Employee Number</th><th>Employee Name</th><th>Designation</th><th>Address</th></tr></thead><tbody>";
+                var scre = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Name</th><th>Role</th><th>Address</th></tr></thead><tbody>";
                 for (i = 0; i < key_num_emp; i++) {
                     var key_first = Object.keys(snapshot.val())[i];
-
                     var employeeRef = firebase.database().ref("employee/" + key_first);
+
                     employeeRef.once('value').then(function(snapshot) {
                         emp_add = snapshot.val().address;
                         emp_type = snapshot.val().type;
                         emp_name = snapshot.val().name;
-                        scre += "<tr><td>" + key_first + "</td><td>" + emp_name + "</td><td>" + emp_type + "</td><td>" + emp_add + "</td></tr>";
+                        scre += "<td>" + emp_name + "</td><td>" + emp_type + "</td><td>" + emp_add + "</td></tr>";
                     });
                 }
 
@@ -319,7 +315,7 @@
 
                 var key_num = snapshot.numChildren();
                 document.getElementById("vehicledeployed").innerHTML = key_num;
-                var scr = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Registration Number</th><th>Contact Number</th><th>Vehicle Type</th><th>Address</th></tr></thead><tbody>";
+                var scr = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Contact Number</th><th>Vehicle Type</th><th>Address</th></tr></thead><tbody>";
                 for (i = 0; i < key_num; i++) {
                     var key_first = Object.keys(snapshot.val())[i];
 
@@ -328,7 +324,7 @@
                         v_add = snapshot.val().address;
                         v_type = snapshot.val().type;
                         v_name = snapshot.val().contact;
-                        scr += "<tr><td>" + key_first + "</td><td>" + v_name + "</td><td>" + v_type + "</td><td>" + v_add + "</td></tr>";
+                        scr += "<td>" + v_name + "</td><td>" + v_type + "</td><td>" + v_add + "</td></tr>";
                     });
                 }
                 setTimeout(tabledisplay2, 1000);
