@@ -1,0 +1,124 @@
+body {
+  background: -webkit-linear-gradient(-98deg, rgb(24, 49, 72), rgb(106, 128, 149));
+  background: linear-gradient(-98deg, rgb(24, 49, 72), rgb(106, 128, 149));
+  padding: 0;
+  margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: black;
+    margin-left: 7%;
+    margin-right: 7%;
+    padding: 1%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+
+#lgnbtn {
+  color: black;
+  background: red;
+  border-radius: 10px;
+  padding: 15px;
+  font-family: 'Comfortaa', cursive;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#lgnbtn:hover {
+  background: green;
+  transition: 0.3s;
+}
+
+#appname {
+  font-family: 'Poiret One', cursive;
+  font-size: 40px;
+}
+
+#welcome_message {
+  margin-top: 7%;
+  margin-left: 4%;
+  margin-right: 4%;
+  font-size: 30px;
+  font-family: 'Poiret One', cursive;
+  font-weight: bolder;
+  color: white;
+}
+
+#column_1 {
+  margin-left: 4%;
+  float: left;
+  width: 55%;
+}
+
+#description {
+  margin-top: 5%;
+  font-family: 'Lalezar', cursive;
+  font-size: 3em;
+  float: left;
+  color: white;
+}
+
+#app_link {
+  margin-top: 6%;
+  float: left;
+  width: 100%;
+  padding-top: 5%;
+  text-align: center;
+}
+
+#app_link a {
+  text-decoration: none;
+  padding: 2%;
+  border: 3px white solid;
+  border-radius: 5px;
+  color: white;
+  transition: 0.3s;
+  font-family: 'Comfortaa', cursive;
+}
+
+#app_link a:hover {
+  transition: 0.3s;
+  color: black;
+  background: white;
+}
+
+#picture {
+  margin-right: 4%;
+  float: right;
+  width: 37%;
+  padding-bottom: 6%;
+}
+
+#underline_text {
+  transition: 0.3s;
+}
+
+#underline_text:hover {
+  color: red;
+  transition: 0.3s;
+}
+
+#copyright {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  bottom:0;
+  font-family: 'Poiret One', cursive;
+  font-size: 20px;
+  color: white;
+  font-size: 20px;
+}
