@@ -59,17 +59,12 @@
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
                     <div class="nav-link" href="#">
                         <i class="fa fa-fw fa-dashboard"></i>
-                        <span class="nav-link-text"><button type="button" onclick="loadDoc()" style="background-color: Transparent;
-    background-repeat:no-repeat;color: #868e96;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;">Send Alert</button></span>
+                        <span class="nav-link-text" onclick="sendAlert()">Send Alert</span>
                     </div>
-
                 </li>
 
                 <script>
-                    function loadDoc() {
+                    function sendAlert() {
                         var xhttp = new XMLHttpRequest();
                         xhttp.onreadystatechange = function() {
                             if (this.readyState == 4 && this.status == 200) {
@@ -85,13 +80,8 @@
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
                     <div class="nav-link" href="#">
                         <i class="fa fa-fw fa-dashboard"></i>
-                        <span class="nav-link-text"><button type="button" onclick="removeAlert()" style="background-color: Transparent;
-    background-repeat:no-repeat;color: #868e96;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;">Clear Alerts</button></span>
+                        <span class="nav-link-text" onclick="removeAlert()">Clear Alerts</span>
                     </div>
-
                 </li>
 
                 <script>
@@ -107,7 +97,24 @@
                         alert('The alerts has been cleared!');
                     }
                 </script>
-            </ul>
+
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <div class="nav-link" href="#">
+                        <i class="fa fa-fw fa-dashboard"></i>
+                        <span class="nav-link-text" onclick="logOut()">Logout</span>
+                    </div>
+                </li>
+
+                <script>
+                      function logOut() {
+                        firebase.auth().signOut().then(function() {
+                            alert('Logout was successful.');
+                            document.location.href = "landing_page.html";
+                        }, function(error) {
+                            alert('An error has occured.');
+                        });
+                      }
+                </script>
             <ul class="navbar-nav sidenav-toggler">
                 <li class="nav-item">
                     <a class="nav-link text-center" id="sidenavToggler">
@@ -146,7 +153,7 @@
                             <div class="card-body-icon">
                                 <i class="fa fa-fw fa-list"></i>
                             </div>
-                            <div class="mr-5"><span id="alertCalls">0</span> Distress Call</div>
+                            <div class="mr-5"><span id="alertCalls">0</span> Distress Calls</div>
                         </div>
                     </div>
                 </div>
@@ -156,7 +163,7 @@
                             <div class="card-body-icon">
                                 <i class="fa fa-fw fa-shopping-cart"></i>
                             </div>
-                            <div class="mr-5"><span id="employeedeployed">1</span> People in Center!</div>
+                            <div class="mr-5"><span id="employeedeployed">1</span> Volunteers</div>
                         </div>
                         <a class="card-footer text-white clearfix small z-1" href="#displayemployee">
               <span class="float-left">View details</span>
@@ -172,7 +179,7 @@
                             <div class="card-body-icon">
                                 <i class="fa fa-fw fa-support"></i>
                             </div>
-                            <div class="mr-5"><span id="vehicledeployed">1</span> Vehicle Deployed</div>
+                            <div class="mr-5"><span id="vehicledeployed">1</span> Vehicles</div>
                         </div>
                         <a class="card-footer text-white clearfix small z-1" href="#displayvehicle">
               <span class="float-left">View details</span>
@@ -202,7 +209,6 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer small text-muted">Updated at <span id="times1">11:59 PM</span></div>
             </div>
 
             <div class="card mb-3" id="displayemployee">
@@ -214,7 +220,6 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer small text-muted">Updated at <span id="times3">11:59 PM</span></div>
             </div>
 
 
@@ -226,11 +231,8 @@
 
                         <div id="vehicletable">
                         </div>
-
-
                     </div>
                 </div>
-                <div class="card-footer small text-muted">Updated at <span id="times2">11:59 PM</span></div>
             </div>
         </div>
 
@@ -246,38 +248,17 @@
       <i class="fa fa-angle-up"></i>
     </a>
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="login.html">Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="outputDiv"></div>
         <script type="text/javascript">
             var url_string = window.location.href;
             var url = new URL(url_string);
             var c = url.searchParams.get("userId");
-            //var userId = firebase.auth().currentUser.uid;
-            //console.log(userId);
-            //return
 
             var groupRef = firebase.database().ref('users/').once('value').then(function(snapshot) {
                 var key_num_users = snapshot.numChildren();
                 document.getElementById("usersdeployed").innerHTML = key_num_users;
             });
 
-            var groupRef = firebase.database().ref('alerted_users/').once('value').then(function(snapshot) {
+            var groupRef = firebase.database().ref('alerts/').once('value').then(function(snapshot) {
                 var key_num_users = snapshot.numChildren();
                 document.getElementById("alertCalls").innerHTML = key_num_users;
             });
@@ -367,9 +348,6 @@
                 var n = d.toLocaleTimeString();
 
                 document.getElementById("times0").innerHTML = n;
-                document.getElementById("times1").innerHTML = n;
-                document.getElementById("times2").innerHTML = n;
-                document.getElementById("times3").innerHTML = n;;
         </script>
 
         <script src="vendor/jquery/jquery.min.js"></script>
