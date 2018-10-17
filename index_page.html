@@ -66,14 +66,17 @@
                 <script>
                     function sendAlert() {
                         var xhttp = new XMLHttpRequest();
-                        xhttp.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                                document.getElementById("demo").innerHTML = this.responseText;
-                            }
-                        };
-                        xhttp.open("GET", "http://blight-backend.herokuapp.com/check_disaster", true);
-                        xhttp.send();
-                        alert('An alert has been sent!');
+                        var alert_type = prompt("Enter the type of alert (ETH | FOT | FLD | TND)");
+
+                        if (alert_type == 'ETH' ||  alert_type == 'FOT' || alert_type == 'FLD' || alert_type == 'TND') {
+                          xhttp.open("GET", "http://blight-backend.herokuapp.com/check_disaster", true);
+                          xhttp.send();
+                          alert('An alert has been sent!');
+                        }
+
+                        else {
+                          alert('Invalid alert type!');
+                        }
                     }
                 </script>
 
