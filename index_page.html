@@ -69,7 +69,7 @@
                         var alert_type = prompt("Enter the type of alert (ETH | FOT | FLD | TND)");
 
                         if (alert_type == 'ETH' ||  alert_type == 'FOT' || alert_type == 'FLD' || alert_type == 'TND') {
-                          xhttp.open("GET", "http://blight-backend.herokuapp.com/check_disaster", true);
+                          xhttp.open("GET", "http://blight-backend.herokuapp.com/check_disaster?type=" + alert_type, true);
                           xhttp.send();
                           alert('An alert has been sent!');
                         }
