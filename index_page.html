@@ -68,8 +68,14 @@
                         var xhttp = new XMLHttpRequest();
                         var alert_type = prompt("Enter the type of alert (ETH | FOT | FLD | TND)");
 
+                        var date = new Date();
+                        var request_millis = date.getTime();
+                        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        var request_date = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
+                        var request_time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
                         if (alert_type == 'ETH' ||  alert_type == 'FOT' || alert_type == 'FLD' || alert_type == 'TND') {
-                          xhttp.open("GET", "http://blight-backend.herokuapp.com/check_disaster?type=" + alert_type, true);
+                          xhttp.open("GET", "http://blight-backend.herokuapp.com/check_disaster?type=" + alert_type + "&millis=" + request_millis + "&date=" + request_date + "&time=" + request_time, true);
                           xhttp.send();
                           alert('An alert has been sent!');
                         }
@@ -261,7 +267,7 @@
                 document.getElementById("usersdeployed").innerHTML = key_num_users;
             });
 
-            var groupRef = firebase.database().ref('alerts/').once('value').then(function(snapshot) {
+            var groupRef = firebase.database().ref('alerts/').on('value', function(snapshot) {
                 var key_num_users = snapshot.numChildren();
                 document.getElementById("alertCalls").innerHTML = key_num_users;
             });
@@ -356,13 +362,7 @@
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-        <script src="vendor/chart.js/Chart.min.js"></script>
-        <script src="vendor/datatables/jquery.dataTables.js"></script>
-        <script src="vendor/datatables/dataTables.bootstrap4.js"></script>
-        <script src="js/sb-admin.min.js"></script>
 
-        <script src="js/sb-admin-datatables.min.js"></script>
-        <script src="js/sb-admin-charts.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
