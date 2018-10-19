@@ -5,8 +5,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="report_styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+       integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+       crossorigin=""/>
+
     <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+    integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+    crossorigin=""></script>
 
     <title>Blight - Report</title>
 
@@ -59,6 +68,8 @@
     Active help(s) calls: <span id = "active_help_number">-</span>
   </div>
 
+  <div id="mapView" ></div>
+
   <div id = "chart1">
     <canvas id="summaryAlertChart"></canvas>
   </div>
@@ -77,6 +88,14 @@
 
   var hourAlert = Array.apply(null, Array(24)).map(Number.prototype.valueOf,0);
   var hourCall = Array.apply(null, Array(24)).map(Number.prototype.valueOf,0);
+
+  var callMap = L.map('mapView').setView([51, 10], 13);
+  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 18,
+		id: 'mapbox.streets'
+	}).addTo(callMap);
+
+  var allMarkers = [];
 
   var alertRef = firebase.database().ref('alert_history_log/').on('value', function(snapshot) {
       var alerts = snapshot.numChildren();
@@ -204,6 +223,18 @@
             if ((request_millis - 86400000) < Number(millis)) {
               month_help_count += 1;
             }
+
+            // Marking the location of the distress calls on the map
+            var circleMarker = L.circle([Number(snapshot.val().lat), Number(snapshot.val().lon)], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.3,
+                radius: 30
+            }).addTo(callMap);
+
+            allMarkers.push(circleMarker);
+            var markerGroup = new L.featureGroup(allMarkers);
+            callMap.fitBounds(markerGroup.getBounds());
 
             // Counting the distress calls per 24-hour basis
             timeValue = Number(snapshot.val().time.split(":")[0]);
