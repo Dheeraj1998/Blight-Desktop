@@ -44,7 +44,7 @@
   </div>
 
   <div id = "month_alerts">
-    Alerts issued in last 30 days: <span id = "month_alert_number">-</span>
+    Alerts issued in last 24 hours: <span id = "month_alert_number">-</span>
   </div>
 
   <div id = "total_help">
@@ -52,14 +52,20 @@
   </div>
 
   <div id = "month_help">
-    Help calls in the last 30 days: <span id = "month_help_number">-</span>
+    Help calls in the last 24 hours: <span id = "month_help_number">-</span>
   </div>
 
   <div id = "total_active">
     Active help(s) calls: <span id = "active_help_number">-</span>
   </div>
 
-  <canvas id="myChart" width="400" height="400"></canvas>
+  <div id = "chart1">
+    <canvas id="summaryAlertChart"></canvas>
+  </div>
+
+  <div id = "chart2">
+    <canvas id="lineAlertChart"></canvas>
+  </div>
 </body>
 
 <script>
@@ -68,6 +74,9 @@
   var report_date = date.getDate() + " " + months[date.getMonth()] + " " + date.getFullYear();
 
   document.getElementById('title').innerHTML = "Blight Report - " + report_date;
+
+  var hourAlert = Array.apply(null, Array(24)).map(Number.prototype.valueOf,0);
+  var hourCall = Array.apply(null, Array(24)).map(Number.prototype.valueOf,0);
 
   var alertRef = firebase.database().ref('alert_history_log/').on('value', function(snapshot) {
       var alerts = snapshot.numChildren();
@@ -86,64 +95,96 @@
 
         var singlealertRef = firebase.database().ref("alert_history_log/" + object_key);
         singlealertRef.on('value', function(snapshot) {
-            // Counting the last alerts in 30 days
+            // Counting the last alerts in 24 hours
             millis = snapshot.val().alert_millis;
-            if ((request_millis - 2592000000) < millis) {
+            if ((request_millis - 86400000) < millis) {
               month_alert_count += 1;
             }
             document.getElementById("month_alert_number").innerHTML = month_alert_count;
 
+            // Counting the alerts per 24-hour basis
+            timeValue = Number(snapshot.val().time.split(":")[0]);
+            hourAlert[timeValue]++;
+
             // Counting the types of calamities
             if (snapshot.val().alert_type == "Flood") {
-              Floods += 1;
-            }
+              Floods += 1; }
 
             if (snapshot.val().alert_type == "Thunderstorm") {
-              Thunderstorms += 1;
-            }
+              Thunderstorms += 1; }
 
             if (snapshot.val().alert_type == "Forest Fire") {
-              Forest_Fires += 1;
-            }
+              Forest_Fires += 1; }
 
             if (snapshot.val().alert_type == "Earthquake") {
-              Earthquakes += 1;
-            }
+              Earthquakes += 1; }
 
-            var myRadarChart = new Chart(ctx, {
-              "type": "radar",
-              "data": {
-                  "labels": ["Earthquakes", "Thunderstorms", "Floods", "Forest Fires"],
-                  "datasets": [{
-                      "label": "Types of calamities",
-                      "data": [Earthquakes, Thunderstorms, Floods, Forest_Fires],
-                      "fill": true,
-                      "backgroundColor": "rgba(255, 99, 132, 0.2)",
-                      "borderColor": "rgb(255, 99, 132)",
-                      "pointBackgroundColor": "rgb(255, 99, 132)",
-                      "pointBorderColor": "#fff",
-                      "pointHoverBackgroundColor": "#fff",
-                      "pointHoverBorderColor": "rgb(255, 99, 132)"
-                  }]
+            try {
+              alertSummaryChart.destroy();
+              lineChart.destroy();
+            } catch(err){}
+
+            alertSummaryChart = new Chart(chart1, {
+              type: 'polarArea',
+              data: {
+                datasets: [{
+                  data: [Earthquakes, Thunderstorms, Floods, Forest_Fires],
+                  backgroundColor: ['#4FC3F7','#FF5964','#FFE74C','#7AC74F'],
+                  label: "Types of calamities",
+                }],
+                labels: ["Earthquakes", "Thunderstorms", "Floods", "Forest Fires"],
               },
-              "options": {
-                "scale": {
-                  "ticks": {
-                    "min": 0,
-                    "stepSize": 1
-                  },
-                  "pointLabels": {
-                    "fontSize": 12
-                  }
+
+              options: {
+                responsive: true,
+                legend: {
+                  position: 'right',
                 },
-                "legend": {
-                  position: 'right'
+
+                title: {
+                  display: true,
+                  text: 'Calamities Summary'
+                },
+
+                scale: {
+                  ticks: {
+                    min: 0,
+                    stepSize: 1
+                  }
                 }
               }
-          });
+            });
+
+            lineChart = new Chart(chart2, {
+              type: 'line',
+        			data: {
+        				labels: ['12AM','1AM','2AM','3AM','4AM','5AM','6AM','7AM','8AM','9AM','10AM','11AM'
+                  ,'12PM','1PM','2PM','3PM','4PM','5PM','6PM','7PM','8PM','9PM','10PM','11PM'],
+        				datasets: [{
+        					label: 'Alerts',
+        					backgroundColor: '#97B9E5',
+        					borderColor: '#86A4CC',
+        					fill: true,
+        					data: hourAlert,
+        				},
+                {
+        					label: 'Distress Calls',
+        					backgroundColor: '#B0FF92',
+        					borderColor: '#9EE582',
+        					fill: true,
+        					data: hourCall,
+        				}]
+        			},
+        			options: {
+        				title: {
+        					text: '24-Hour of Alerts/Help'
+        				}
+              }
+            });
+
         });
       }
-  });
+    });
 
   var helpRef = firebase.database().ref('help_requests_log/').on('value', function(snapshot) {
       var helps = snapshot.numChildren();
@@ -160,10 +201,47 @@
         singlealertRef.on('value', function(snapshot) {
             millis = snapshot.val().alert_millis;
 
-            if ((request_millis - 2592000000) < Number(millis)) {
+            if ((request_millis - 86400000) < Number(millis)) {
               month_help_count += 1;
             }
+
+            // Counting the distress calls per 24-hour basis
+            timeValue = Number(snapshot.val().time.split(":")[0]);
+            hourCall[timeValue]++;
+
             document.getElementById("month_help_number").innerHTML = month_help_count;
+
+            try {
+              lineChart.destroy();
+            } catch(err){}
+
+            lineChart = new Chart(chart2, {
+              type: 'line',
+        			data: {
+        				labels: ['12AM','1AM','2AM','3AM','4AM','5AM','6AM','7AM','8AM','9AM','10AM','11AM'
+                  ,'12PM','1PM','2PM','3PM','4PM','5PM','6PM','7PM','8PM','9PM','10PM','11PM'],
+        				datasets: [{
+        					label: 'Alerts',
+        					backgroundColor: '#97B9E5',
+        					borderColor: '#86A4CC',
+        					fill: true,
+        					data: hourAlert,
+        				},
+                {
+        					label: 'Distress Calls',
+        					backgroundColor: '#B0FF92',
+        					borderColor: '#9EE582',
+        					fill: true,
+        					data: hourCall,
+        				}]
+        			},
+        			options: {
+        				title: {
+        					text: 'Hour-graph of Alerts/Calls',
+                  display: true
+        				}
+              }
+            });
         });
       }
   });
@@ -175,5 +253,6 @@
 </script>
 
 <script>
-  var ctx = document.getElementById("myChart");
+  var chart1 = document.getElementById("summaryAlertChart");
+  var chart2 = document.getElementById("lineAlertChart");
 </script>
