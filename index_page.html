@@ -10,7 +10,6 @@
 
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="./vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
     <link href="./css/sb-admin.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
     <script>
@@ -37,26 +36,26 @@
     </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
                     <a class="nav-link" href="index_page.html">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Dashboard</span>
           </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
                     <a class="nav-link" href="./register_emp.html">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Register Volunteers</span>
           </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
                     <a class="nav-link" href="./register_car.html">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Register Vehicles</span>
           </a>
                 </li>
 
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
                     <div class="nav-link" href="#">
                         <i class="fa fa-fw fa-dashboard"></i>
                         <span class="nav-link-text" onclick="sendAlert()">Send Alert</span>
@@ -86,7 +85,7 @@
                     }
                 </script>
 
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
                     <div class="nav-link" href="#">
                         <i class="fa fa-fw fa-dashboard"></i>
                         <span class="nav-link-text" onclick="removeAlert()">Clear Alerts</span>
@@ -107,7 +106,14 @@
                     }
                 </script>
 
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
+                    <a class="nav-link" href="./report_page.html">
+                      <i class="fa fa-fw fa-dashboard"></i>
+                      <span class="nav-link-text">Report</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" data-toggle="tooltip" data-placement="right">
                     <div class="nav-link" href="#">
                         <i class="fa fa-fw fa-dashboard"></i>
                         <span class="nav-link-text" onclick="logOut()">Logout</span>
@@ -124,6 +130,8 @@
                         });
                       }
                 </script>
+
+              </li>
             <ul class="navbar-nav sidenav-toggler">
                 <li class="nav-item">
                     <a class="nav-link text-center" id="sidenavToggler">
@@ -273,8 +281,6 @@
             });
 
             firebase.database().ref('employee/').once('value').then(function(snapshot) {
-                var name = (snapshot.val());
-
                 var key_num_emp = snapshot.numChildren();
                 document.getElementById("employeedeployed").innerHTML = key_num_emp;
                 var scre = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Name</th><th>Role</th><th>Address</th></tr></thead><tbody>";
@@ -289,7 +295,6 @@
                         scre += "<td>" + emp_name + "</td><td>" + emp_type + "</td><td>" + emp_add + "</td></tr>";
                     });
                 }
-
 
                 setTimeout(tabledisplay1, 1000);
 
@@ -328,7 +333,6 @@
 
 
                 firebase.database().ref('users/').once('value').then(function(snapshot) {
-                    var name = (snapshot.val());
                     var key_num_emp = snapshot.numChildren();
 
                     var scru = "<table class='table table-bordered' id='dataTable' width='100%'cellspacing='0'><thead><tr><th>Name</th><th>Contact number</th><th>Emergency contact</th></tr></thead><tbody>";
