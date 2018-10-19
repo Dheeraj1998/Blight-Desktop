@@ -6,8 +6,8 @@ The main motive of this project is to provide a live feed of the victim to relev
 
 # Screenshots
 
-<img src="screenshots/screenshot_1.png" style="border: 1px solid black"></img> 
-<img src="screenshots/screenshot_2.png" style="border: 1px solid black"></img> 
-<img src="screenshots/screenshot_3.png"></img>
-<img src="screenshots/screenshot_4.png"></img>
+<img src="screenshots/screenshot_1.png"></img> <br> <br> 
+<img src="screenshots/screenshot_2.png"></img> <br> <br>
+<img src="screenshots/screenshot_3.png"></img> <br> <br>
+<img src="screenshots/screenshot_4.png"></img> <br> <br>
 <img src="screenshots/screenshot_5.png"></img>
