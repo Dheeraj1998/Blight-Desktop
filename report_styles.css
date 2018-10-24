@@ -26,10 +26,10 @@ body {
 #total_alerts, #month_alerts {
   float: left;
   text-align: center;
-  padding: 2%;
+  padding: 1%;
   font-weight: bold;
   font-size: 20px;
-  margin: 2%;
+  margin: 1%;
   margin-top: 4%;
   border: 3px solid black;
   border-radius: 7px;
@@ -39,9 +39,9 @@ body {
 #total_help, #month_help {
   float: right;
   text-align: center;
-  padding: 2%;
+  padding: 1%;
   font-weight: bold;
-  margin: 2%;
+  margin: 1%;
   margin-top: 4%;
   font-size: 20px;
   border: 3px solid black;
